@@ -58,8 +58,8 @@ function App() {
           <div style={{ color: "var(--accent)", display: "flex", alignItems: "center" }}>
             <Hexagon size={28} strokeWidth={2.5} fill="rgba(240, 185, 11, 0.2)" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: "1.1rem", fontFamily: "Outfit", color: "var(--text-primary)" }}>
-            Yield <span style={{ color: "var(--accent)" }}>Subscriptions</span>
+          <span style={{ fontWeight: 700, fontSize: "1.1rem", fontFamily: "Outfit", color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+            Vaulter
           </span>
         </div>
 
