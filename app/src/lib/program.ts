@@ -40,6 +40,6 @@ function resolveProgramId(): string {
 export type YieldSubscriptions = Idl;
 
 export const YIELD_SUBSCRIPTIONS_IDL = idlJson as YieldSubscriptions;
-export const PROGRAM_ID = new PublicKey(resolveProgramId());
+export const PROGRAM_ID = new PublicKey(idlJson.address || resolveProgramId());
 export const RPC_URL = import.meta.env.VITE_RPC_URL?.trim() || DEFAULT_RPC_URL;
 export const USDC_MINT = new PublicKey(import.meta.env.VITE_USDC_MINT?.trim() || DEFAULT_USDC_MINT);
