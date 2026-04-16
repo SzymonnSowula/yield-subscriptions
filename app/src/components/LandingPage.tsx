@@ -369,9 +369,9 @@ export function LandingPage({ onConnected }: LandingPageProps) {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
           {[
-            { icon: <Shield size={20} strokeWidth={1.5} />, title: "Secure Vaults", desc: "Funds deposited into PDA-controlled vaults. No admin keys, no centralized risk. Math protects your deposit." },
-            { icon: <Zap size={20} strokeWidth={1.5} />, title: "Auto Settlements", desc: "Permissionless settlement engine. Anyone can trigger it. Yield covers fees elegantly each billing period." },
-            { icon: <TrendingUp size={20} strokeWidth={1.5} />, title: "Earn While You Pay", desc: "Your USDC generates yield. That yield pays subscription costs so your principal lasts significantly longer." },
+            { icon: <Database size={20} strokeWidth={1.5} />, title: "Anchor Smart Contracts", desc: "Written natively in Rust using the Anchor framework. Memory-safe, highly optimized, and thoroughly tested on the Solana Devnet pipeline." },
+            { icon: <Zap size={20} strokeWidth={1.5} />, title: "Kamino DeFi Routing", desc: "Seamlessly integrated with Kamino Finance via cross-program invocations. Capital is staked into lending pools to generate risk-isolated stablecoin yield." },
+            { icon: <Shield size={20} strokeWidth={1.5} />, title: "Stateless PDAs", desc: "100% deterministic state management using Program Derived Addresses. No intermediary multi-sigs and zero access by protocol creators." },
           ].map((f, i) => (
             <div key={i} className={`reveal reveal-delay-${i + 1}`} style={{ 
               background: "rgba(10, 10, 12, 0.6)", 
