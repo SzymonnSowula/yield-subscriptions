@@ -11,7 +11,7 @@ interface LandingPageProps {
 
 const faqs = [
   {
-    q: "How does Yield Subscriptions work?",
+    q: "How does Vaulter work?",
     a: "Merchants create subscription plans with custom pricing and periods. Users deposit USDC and earn yield while their subscription is active. Settlements happen automatically each period — yield covers the subscription cost so your principal stays intact longer.",
   },
   {
@@ -315,7 +315,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
       {/* ── Why Us ── */}
       <section id="why" style={{ position: "relative", zIndex: 1, padding: "2rem 2rem 6rem", maxWidth: 1200, margin: "0 auto" }}>
         <div className="reveal" style={{ textAlign: "center", marginBottom: "4rem" }}>
-          <h2 style={{ fontSize: "2.5rem", fontWeight: 700, fontFamily: "Outfit", marginBottom: "1rem" }}>Why Yield Subscriptions?</h2>
+          <h2 style={{ fontSize: "2.5rem", fontWeight: 700, fontFamily: "Outfit", marginBottom: "1rem" }}>Why Vaulter?</h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem" }}>Simply and securely manage your recurring payments on-chain.</p>
         </div>
 
@@ -483,7 +483,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "2rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <Hexagon size={24} fill="rgba(240, 185, 11, 0.2)" color="var(--accent)" />
-            <span style={{ fontWeight: 600, fontSize: "1rem", fontFamily: "Outfit" }}>Yield Subscriptions</span>
+            <span style={{ fontWeight: 600, fontSize: "1rem", fontFamily: "Outfit" }}>Vaulter</span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
@@ -495,7 +495,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           </div>
 
           <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 500 }}>
-            © 2026 Yield Subscriptions
+            © 2026 Vaulter
           </span>
         </div>
       </footer>
