@@ -1,7 +1,7 @@
 import type { Idl } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import anchorTomlRaw from "../../../Anchor.toml?raw";
-import idlJson from "../../../target/idl/yield_subscriptions.json";
+import idlJson from "./idl.json";
 
 const PROGRAM_KEY = "yield_subscriptions";
 const DEFAULT_RPC_URL = "https://api.devnet.solana.com";
