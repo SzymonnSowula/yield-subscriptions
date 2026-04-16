@@ -41,6 +41,7 @@ function App() {
 
       {/* ── Header ── */}
       <header
+        className="px-4 md:px-10 py-4"
         style={{
           position: "sticky",
           top: 0,
@@ -48,13 +49,12 @@ function App() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "1rem 2.5rem",
           background: "rgba(10, 10, 12, 0.7)",
           backdropFilter: "blur(24px)",
           borderBottom: "1px solid var(--glass-border)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <div style={{ color: "var(--accent)", display: "flex", alignItems: "center" }}>
             <Hexagon size={28} strokeWidth={2.5} fill="rgba(240, 185, 11, 0.2)" />
           </div>
@@ -64,7 +64,10 @@ function App() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-          <span className="badge badge-network">Devnet</span>
+          <a href="https://github.com/SzymonnSowula/yield-subscriptions/blob/main/PROTOCOL_DOCS.md" target="_blank" rel="noreferrer" style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--accent)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fcd34d"} onMouseLeave={e => e.currentTarget.style.color = "var(--accent)"} className="hidden sm:inline-block">
+            Protocol Docs
+          </a>
+          <span className="badge badge-network hidden sm:inline-flex">Devnet</span>
           <WalletDisconnectButton 
             className="btn-secondary" 
             style={{ height: "2.25rem", padding: "0 1rem", fontSize: "0.8rem", borderRadius: "8px" }} 
@@ -75,16 +78,16 @@ function App() {
 
       {/* ── Content ── */}
       <main
+        className="px-4 md:px-10 py-8"
         style={{
           position: "relative",
           zIndex: 1,
           maxWidth: 1400,
           margin: "0 auto",
-          padding: "2rem 2.5rem",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-          <h1 className="section-title" style={{ fontSize: "2rem", margin: 0 }}>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <h1 className="section-title" style={{ fontSize: "1.75rem", margin: 0 }}>
             {viewMode === "merchant" ? "Merchant Portal" : "User Dashboard"}
           </h1>
           
@@ -139,13 +142,7 @@ function App() {
             <span style={{ fontSize: "1rem", fontWeight: 500 }}>Initializing protocol layer…</span>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 380px",
-              gap: "2rem",
-            }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               {viewMode === "merchant" ? (
                 <MerchantView

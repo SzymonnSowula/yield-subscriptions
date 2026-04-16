@@ -153,7 +153,7 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
           </div>
         )}
 
-        <form onSubmit={handleCreatePlan} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
+        <form onSubmit={handleCreatePlan} className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
             <label className="label" htmlFor="pricePerPeriod">Price / Period (USDC)</label>
             <input id="pricePerPeriod" className="input" type="number" min="0" step="0.000001" value={pricePerPeriod} onChange={(e) => setPricePerPeriod(e.target.value)} required />
@@ -193,7 +193,7 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
 
       {/* ── Plans List ── */}
       <section className="panel animate-fade-in" style={{ animationDelay: "200ms" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h2 style={{ fontSize: "1.25rem", fontWeight: 600, margin: 0, fontFamily: "Outfit" }}>Active Plans</h2>
           <button className="btn-secondary" onClick={() => void refreshMerchantPlans()} type="button" disabled={loadingPlans} style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", height: "auto" }}>
             <RefreshCw size={14} className={loadingPlans ? "animate-spin" : ""} style={{ animation: loadingPlans ? "spin 1s linear infinite" : "none" }} /> Refresh
@@ -221,7 +221,7 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
                     {shortPk(plan.publicKey)}
                   </p>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", fontSize: "0.875rem" }}>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Price</span>
                     <div style={{ fontWeight: 600, marginTop: "0.3rem", fontSize: "1.05rem", color: "var(--accent)" }}>{formatUsdc(plan.account.pricePerPeriod)} USDC</div>

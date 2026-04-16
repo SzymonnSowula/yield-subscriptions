@@ -202,7 +202,7 @@ export function UserView({ program, user, globalConfigPda, onTx }: UserViewProps
   return (
     <section className="panel animate-fade-in" style={{ animationDelay: "100ms" }}>
       {/* ── Header ── */}
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "2rem", flexWrap: "wrap", gap: "1.5rem" }}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-6">
         <div>
           <h2 style={{ fontSize: "1.25rem", fontWeight: 600, margin: "0 0 0.75rem", fontFamily: "Outfit" }}>Available Plans</h2>
           <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", padding: "0.5rem 1rem", background: "rgba(0,0,0,0.3)", borderRadius: "10px", border: "1px solid var(--border)" }}>
@@ -267,7 +267,7 @@ export function UserView({ program, user, globalConfigPda, onTx }: UserViewProps
                 </div>
 
                 {/* Plan info */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
                   <div>
                     <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Price</span>
                     <div style={{ fontWeight: 600, marginTop: "0.3rem", fontSize: "1.05rem", color: "var(--text-primary)" }}>{formatUsdc(plan.account.pricePerPeriod)} USDC</div>
@@ -284,7 +284,7 @@ export function UserView({ program, user, globalConfigPda, onTx }: UserViewProps
 
                 {!subscription ? (
                   /* ── Subscribe form ── */
-                  <div style={{ display: "flex", gap: "1rem", alignItems: "center", background: "rgba(0,0,0,0.2)", padding: "1rem", borderRadius: "12px", border: "1px solid var(--border)" }}>
+                  <div className="flex flex-col sm:flex-row gap-4 sm:items-center" style={{ background: "rgba(0,0,0,0.2)", padding: "1rem", borderRadius: "12px", border: "1px solid var(--border)" }}>
                     <div style={{ flex: 1 }}>
                       <input className="input" type="number" min="0" step="0.000001" placeholder="Deposit amount (USDC)" value={depositValues[planKey] ?? ""} onChange={(e) => setDepositValues((prev) => ({ ...prev, [planKey]: e.target.value }))} style={{ background: "rgba(0,0,0,0.5)", border: "1px solid var(--border)" }} />
                     </div>
@@ -296,7 +296,7 @@ export function UserView({ program, user, globalConfigPda, onTx }: UserViewProps
                   /* ── Subscription info ── */
                   <div style={{ background: isActive ? "rgba(52, 211, 153, 0.03)" : "rgba(0,0,0,0.2)", borderRadius: "12px", padding: "1.25rem", border: "1px solid var(--border)", position: "relative" }}>
                     
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.25rem" }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
                       <div>
                         <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Principal Left</span>
                         <div style={{ fontWeight: 700, marginTop: "0.3rem", fontSize: "1.1rem", color: isActive ? "var(--text-primary)" : "var(--text-muted)" }}>

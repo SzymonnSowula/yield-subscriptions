@@ -170,6 +170,9 @@ export function LandingPage({ onConnected }: LandingPageProps) {
             <a href="#faq" style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--text-secondary)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"} onMouseLeave={e => e.currentTarget.style.color = "var(--text-secondary)"}>
               FAQ
             </a>
+            <a href="https://github.com/SzymonnSowula/yield-subscriptions/blob/main/PROTOCOL_DOCS.md" target="_blank" rel="noreferrer" style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--accent)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fcd34d"} onMouseLeave={e => e.currentTarget.style.color = "var(--accent)"}>
+              Protocol Docs
+            </a>
           </div>
           <WalletMultiButton className="connect-btn-nav" startIcon={<Wallet size={16} />} />
         </div>
@@ -177,18 +180,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
 
       {/* ── Hero ── */}
       <section
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          minHeight: "100vh",
-          padding: "8rem 4rem 4rem",
-          maxWidth: 1280,
-          margin: "0 auto",
-          gap: "4rem",
-        }}
+        className="flex flex-col lg:flex-row items-center justify-between min-h-screen px-6 py-32 lg:px-16 max-w-7xl mx-auto gap-12 lg:gap-16 relative z-10"
       >
         <div style={{ maxWidth: 640 }}>
           {/* Badge */}
@@ -218,7 +210,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           </p>
 
           {/* CTA */}
-          <div className="reveal reveal-delay-3" style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "4rem" }}>
+          <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-16">
             <div style={{ position: "relative" }}>
               <div style={{ position: "absolute", inset: -10, background: "var(--glow-gold)", filter: "blur(20px)", borderRadius: "50%", zIndex: -1 }}></div>
               <WalletMultiButton className="connect-btn" startIcon={<Wallet size={18} />} />
@@ -239,7 +231,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           </div>
 
           {/* Stats */}
-          <div style={{ display: "flex", alignItems: "center", gap: "3rem" }}>
+          <div className="flex flex-wrap lg:flex-nowrap items-center gap-8 lg:gap-12">
             <div style={{ position: "relative" }}>
               <div style={{ position: "absolute", top: -20, left: 0, fontSize: "0.6rem", color: "var(--accent-secondary)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: "0.25rem", whiteSpace: "nowrap" }}>
                 <div style={{ width: 6, height: 6, background: "var(--accent-secondary)", borderRadius: "50%", boxShadow: "0 0 8px var(--accent-secondary)" }} />
@@ -319,7 +311,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem" }}>Simply and securely manage your recurring payments on-chain.</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { title: "Automated Settlements", desc: "Deposit once, subscriptions are paid automatically every period. No manual transfers.", icon: <RefreshCw size={90} strokeWidth={1} /> },
             { title: "Stay updated with on-chain data", desc: "Get the latest insights on your subscription spending and yields directly from Web3.", icon: <BarChart3 size={90} strokeWidth={1} /> },
@@ -367,7 +359,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { icon: <Database size={20} strokeWidth={1.5} />, title: "Anchor Smart Contracts", desc: "Written natively in Rust using the Anchor framework. Memory-safe, highly optimized, and thoroughly tested on the Solana Devnet pipeline." },
             { icon: <Zap size={20} strokeWidth={1.5} />, title: "Kamino DeFi Routing", desc: "Seamlessly integrated with Kamino Finance via cross-program invocations. Capital is staked into lending pools to generate risk-isolated stablecoin yield." },
@@ -406,7 +398,7 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           <div className="reveal" style={{ textAlign: "center", marginBottom: "5rem" }}>
             <h2 className="section-title">How it works</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "3rem" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {[
               { step: "01", icon: <Wallet />, title: "Connect Wallet", desc: "Link Phantom or Solflare to authenticate seamlessly." },
               { step: "02", icon: <Search />, title: "Find Plan", desc: "Choose a merchant subscription that fits your needs." },
@@ -487,6 +479,9 @@ export function LandingPage({ onConnected }: LandingPageProps) {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <a href="https://github.com/SzymonnSowula/yield-subscriptions/blob/main/PROTOCOL_DOCS.md" target="_blank" rel="noreferrer" style={{ fontSize: "0.875rem", color: "var(--text-muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"} onMouseLeave={e => e.currentTarget.style.color = "var(--text-muted)"}>
+              Architecture
+            </a>
             {[<MessageCircle size={18} key="tw" />, <Terminal size={18} key="gh" />, <Globe size={18} key="gl" />].map((icon, i) => (
               <a key={i} href="#" style={{ color: "var(--text-muted)", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"} onMouseLeave={e => e.currentTarget.style.color = "var(--text-muted)"}>
                 {icon}
