@@ -13,7 +13,10 @@ export function useAnchorProgram(
       return null;
     }
 
-    const provider = new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions());
+    const provider = new AnchorProvider(connection, wallet, {
+      preflightCommitment: "confirmed",
+      commitment: "confirmed"
+    });
     return new Program<YieldSubscriptions>(YIELD_SUBSCRIPTIONS_IDL, provider);
   }, [connection, wallet]);
 }

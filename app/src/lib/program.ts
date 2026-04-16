@@ -5,7 +5,7 @@ import idlJson from "../../../target/idl/yield_subscriptions.json";
 
 const PROGRAM_KEY = "yield_subscriptions";
 const DEFAULT_RPC_URL = "https://api.devnet.solana.com";
-const DEFAULT_USDC_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
+const DEFAULT_USDC_MINT = "Yzby4YXXkvhW5Soety1qDvjCMN8vtif1VkuLS5Ygaiq";
 
 function readProgramIdFromSection(rawToml: string, section: string): string | null {
   const sectionMatch = rawToml.match(new RegExp(`\\[programs\\.${section}\\]([\\s\\S]*?)(?=\\n\\[|$)`));

@@ -7,6 +7,7 @@ import { getMerchantPlanPda, getVaultPda } from "../lib/pdas";
 import { getErrorMessage } from "../lib/errors";
 import { formatUsdc, parseUsdcToBn, periodDaysToSeconds, periodSecondsToDays } from "../lib/usdc";
 import type { MerchantPlanAccount, ProgramAccount } from "../types/accounts";
+import { RefreshCw, Plus, AlertCircle, CheckCircle2, Settings } from "lucide-react";
 
 interface MerchantViewProps {
   program: Program<YieldSubscriptions>;
@@ -20,7 +21,7 @@ const PERIOD_OPTIONS = [7, 30, 90] as const;
 
 function shortPk(pubkey: PublicKey): string {
   const value = pubkey.toBase58();
-  return `${value.slice(0, 6)}...${value.slice(-6)}`;
+  return `${value.slice(0, 6)}…${value.slice(-6)}`;
 }
 
 export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onTx }: MerchantViewProps) {
@@ -56,58 +57,27 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
 
   useEffect(() => {
     let active = true;
-
     const checkConfig = async () => {
       try {
         const info = await program.provider.connection.getAccountInfo(globalConfigPda);
-        if (active) {
-          setGlobalConfigExists(Boolean(info));
-        }
+        if (active) setGlobalConfigExists(Boolean(info));
       } catch {
-        if (active) {
-          setGlobalConfigExists(false);
-        }
+        if (active) setGlobalConfigExists(false);
       }
     };
-
     void checkConfig();
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [program, globalConfigPda]);
-
-  useEffect(() => {
-    let active = true;
-    let listenerId: number | null = null;
-    const connection = program.provider.connection;
-
-    (async () => {
-      listenerId = await connection.onProgramAccountChange(program.programId, () => {
-        if (active) {
-          void refreshMerchantPlans();
-        }
-      });
-    })();
-
-    return () => {
-      active = false;
-      if (listenerId !== null) {
-        void connection.removeProgramAccountChangeListener(listenerId);
-      }
-    };
-  }, [program, refreshMerchantPlans]);
 
   const handleCreatePlan = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
     setSuccess(null);
-
     try {
       const priceInUnits = parseUsdcToBn(pricePerPeriod);
       const minDepositInUnits = parseUsdcToBn(minDeposit);
       const periodSeconds = periodDaysToSeconds(periodDays);
-
       const merchantPlanPda = getMerchantPlanPda(program.programId, merchant);
       const vaultPda = getVaultPda(program.programId, merchantPlanPda);
 
@@ -139,12 +109,9 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
     setIsInitializing(true);
     setError(null);
     setSuccess(null);
-
     try {
-      // Default values: 5% annual yield (500 bps), 1% protocol fee (100 bps)
       const annualYieldBps = 500;
       const protocolFeeBps = 100;
-
       const signature = await program.methods
         .initializeConfig(merchant, annualYieldBps, protocolFeeBps)
         .accounts({
@@ -153,7 +120,6 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
           systemProgram: SystemProgram.programId,
         })
         .rpc();
-
       onTx(signature, "initializeConfig");
       setSuccess("Global config initialized successfully.");
       setGlobalConfigExists(true);
@@ -165,148 +131,108 @@ export function MerchantView({ program, merchant, globalConfigPda, usdcMint, onT
   };
 
   return (
-    <div className="space-y-6">
-      {/* Create Plan Card */}
-      <section className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-neutral-900">Create Merchant Plan</h2>
+    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      {/* ── Create Plan ── */}
+      <section className="panel animate-fade-in" style={{ animationDelay: "100ms" }}>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: 600, margin: "0 0 0.5rem", fontFamily: "Outfit" }}>Create Merchant Plan</h2>
+        <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", margin: "0 0 1.5rem" }}>
+          Define the pricing and billing period for your subscription offering.
+        </p>
 
         {globalConfigExists === false && (
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <p className="text-sm text-amber-700">
-                <span className="font-medium">Note:</span> Global config is missing. You need to initialize it before creating plans.
+          <div className="alert alert-warning" style={{ marginBottom: "1.5rem" }}>
+            <AlertCircle size={20} color="#fbbf24" style={{ flexShrink: 0, marginTop: 2 }} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", width: "100%" }}>
+              <p style={{ fontSize: "0.875rem", margin: 0, fontWeight: 500 }}>
+                Protocol global config is missing. It must be initialized once by the admin.
               </p>
-              <button
-                className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                onClick={() => void handleInitializeConfig()}
-                disabled={isInitializing}
-              >
-                {isInitializing ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Initializing...
-                  </>
-                ) : "Initialize Config"}
+              <button className="btn-primary" onClick={() => void handleInitializeConfig()} disabled={isInitializing} style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", height: "auto" }}>
+                {isInitializing ? <><span className="spinner spinner-sm" /> Initializing…</> : <><Settings size={14} /> Initialize Config</>}
               </button>
             </div>
           </div>
         )}
 
-        <form className="mt-6 grid gap-4 md:grid-cols-3" onSubmit={handleCreatePlan}>
+        <form onSubmit={handleCreatePlan} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2" htmlFor="pricePerPeriod">
-              Price Per Period (USDC)
-            </label>
-            <input
-              id="pricePerPeriod"
-              className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all"
-              type="number"
-              min="0"
-              step="0.000001"
-              value={pricePerPeriod}
-              onChange={(event) => setPricePerPeriod(event.target.value)}
-              required
-            />
+            <label className="label" htmlFor="pricePerPeriod">Price / Period (USDC)</label>
+            <input id="pricePerPeriod" className="input" type="number" min="0" step="0.000001" value={pricePerPeriod} onChange={(e) => setPricePerPeriod(e.target.value)} required />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2" htmlFor="periodDays">
-              Period (days)
-            </label>
-            <select
-              id="periodDays"
-              className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all appearance-none cursor-pointer"
-              value={periodDays}
-              onChange={(event) => setPeriodDays(Number(event.target.value) as (typeof PERIOD_OPTIONS)[number])}
-            >
-              {PERIOD_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option} days
-                </option>
+            <label className="label" htmlFor="periodDays">Billing Period</label>
+            <select id="periodDays" className="input" value={periodDays} onChange={(e) => setPeriodDays(Number(e.target.value) as (typeof PERIOD_OPTIONS)[number])}>
+              {PERIOD_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt} Days</option>
               ))}
             </select>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2" htmlFor="minDeposit">
-              Min Deposit (USDC)
-            </label>
-            <input
-              id="minDeposit"
-              className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all"
-              type="number"
-              min="0"
-              step="0.000001"
-              value={minDeposit}
-              onChange={(event) => setMinDeposit(event.target.value)}
-              required
-            />
+            <label className="label" htmlFor="minDeposit">Min Deposit (USDC)</label>
+            <input id="minDeposit" className="input" type="number" min="0" step="0.000001" value={minDeposit} onChange={(e) => setMinDeposit(e.target.value)} required />
           </div>
-
-          <div className="md:col-span-3">
-            <button
-              className="inline-flex items-center justify-center px-6 py-2.5 bg-violet-600 text-white font-medium rounded-xl hover:bg-violet-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                  Creating...
-                </>
-              ) : "Create Plan"}
+          <div style={{ gridColumn: "1 / -1", marginTop: "0.5rem" }}>
+            <button className="btn-primary w-full" type="submit" disabled={isSubmitting || globalConfigExists === false} style={{ width: "100%" }}>
+              {isSubmitting ? <><span className="spinner spinner-sm" /> Processing Transaction…</> : <><Plus size={18} /> Launch Subscription Plan</>}
             </button>
           </div>
         </form>
 
         {error && (
-          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="alert alert-error" style={{ marginTop: "1rem" }}>
+            <AlertCircle size={18} color="#f87171" style={{ flexShrink: 0 }} />
+            <p style={{ fontSize: "0.875rem", margin: 0 }}>{error}</p>
           </div>
         )}
         {success && (
-          <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-            <p className="text-sm text-emerald-600">{success}</p>
+          <div className="alert alert-success" style={{ marginTop: "1rem" }}>
+            <CheckCircle2 size={18} color="#34d399" style={{ flexShrink: 0 }} />
+            <p style={{ fontSize: "0.875rem", margin: 0 }}>{success}</p>
           </div>
         )}
       </section>
 
-      {/* Plans List */}
-      <section className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-neutral-900">Your Plans</h2>
-          <button
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors"
-            onClick={() => void refreshMerchantPlans()}
-            type="button"
-            disabled={loadingPlans}
-          >
-            {loadingPlans && <span className="w-4 h-4 border-2 border-neutral-400/30 border-t-neutral-600 rounded-full animate-spin" />}
-            {loadingPlans ? "Refreshing..." : "Refresh"}
+      {/* ── Plans List ── */}
+      <section className="panel animate-fade-in" style={{ animationDelay: "200ms" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 600, margin: 0, fontFamily: "Outfit" }}>Active Plans</h2>
+          <button className="btn-secondary" onClick={() => void refreshMerchantPlans()} type="button" disabled={loadingPlans} style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", height: "auto" }}>
+            <RefreshCw size={14} className={loadingPlans ? "animate-spin" : ""} style={{ animation: loadingPlans ? "spin 1s linear infinite" : "none" }} /> Refresh
           </button>
         </div>
 
-        {plans.length === 0 ? (
-          <div className="rounded-xl bg-neutral-50 border border-neutral-100 p-8 text-center">
-            <p className="text-sm text-neutral-500">No plans found for merchant <span className="font-mono text-neutral-700">{shortPk(merchant)}</span>.</p>
+        {loadingPlans && plans.length === 0 ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div className="skeleton" style={{ height: "120px", width: "100%", borderRadius: "16px" }} />
+            <div className="skeleton" style={{ height: "120px", width: "100%", borderRadius: "16px" }} />
+          </div>
+        ) : plans.length === 0 ? (
+          <div style={{ padding: "3rem 2rem", textAlign: "center", background: "rgba(0,0,0,0.3)", borderRadius: 16, border: "1px dashed var(--glass-border)" }}>
+            <p style={{ fontSize: "0.9375rem", color: "var(--text-muted)", margin: 0 }}>
+              No plans found. Create your first plan above to start accepting subscriptions.
+            </p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {plans.map((plan) => (
-              <article key={plan.publicKey.toBase58()} className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-5 hover:shadow-md transition-shadow">
-                <p className="font-mono text-xs text-neutral-400 mb-3">{plan.publicKey.toBase58()}</p>
-                <div className="grid gap-4 text-sm md:grid-cols-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-neutral-500">Price:</span>
-                    <span className="font-medium text-neutral-900">{formatUsdc(plan.account.pricePerPeriod)} USDC</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {plans.map((plan, i) => (
+              <article key={plan.publicKey.toBase58()} className="panel-inner" style={{ animationDelay: `${i * 100}ms` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", paddingBottom: "0.75rem", borderBottom: "1px solid var(--border)" }}>
+                  <span style={{ fontFamily: "Outfit", fontWeight: 600, color: "var(--text-primary)" }}>Plan #{i + 1}</span>
+                  <p style={{ fontFamily: "monospace", fontSize: "0.7rem", color: "var(--text-muted)", margin: 0, background: "rgba(0,0,0,0.4)", padding: "0.25rem 0.5rem", borderRadius: "6px" }}>
+                    {shortPk(plan.publicKey)}
+                  </p>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", fontSize: "0.875rem" }}>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Price</span>
+                    <div style={{ fontWeight: 600, marginTop: "0.3rem", fontSize: "1.05rem", color: "var(--accent)" }}>{formatUsdc(plan.account.pricePerPeriod)} USDC</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-neutral-500">Period:</span>
-                    <span className="font-medium text-neutral-900">{periodSecondsToDays(plan.account.periodSeconds)} days</span>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Period</span>
+                    <div style={{ fontWeight: 600, marginTop: "0.3rem", fontSize: "1.05rem" }}>{periodSecondsToDays(plan.account.periodSeconds)} Days</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-neutral-500">Min deposit:</span>
-                    <span className="font-medium text-neutral-900">{formatUsdc(plan.account.minDeposit)} USDC</span>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>Min Deposit</span>
+                    <div style={{ fontWeight: 600, marginTop: "0.3rem", fontSize: "1.05rem" }}>{formatUsdc(plan.account.minDeposit)} USDC</div>
                   </div>
                 </div>
               </article>
