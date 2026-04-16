@@ -1,5 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Buffer } from "buffer";
+
+// Hard Vite Polyfill for Web3.js and Anchor
+window.Buffer = window.Buffer || Buffer;
+window.global = window.global || window;
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
