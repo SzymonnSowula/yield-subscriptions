@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { MerchantView } from "./components/MerchantView";
@@ -25,14 +25,34 @@ function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showDocs, setShowDocs] = useState(false);
 
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setShowDocs(window.location.pathname === "/docs");
+      // If we are on /docs, automatically hide landing page
+      if (window.location.pathname === "/docs" && !showDashboard) {
+        setShowDashboard(true);
+      }
+    };
+    
+    handleLocationChange();
+    window.addEventListener("popstate", handleLocationChange);
+    return () => window.removeEventListener("popstate", handleLocationChange);
+  }, [showDashboard]);
+
+  const toggleDocsUrl = () => {
+    const nextUrl = showDocs ? "/" : "/docs";
+    window.history.pushState({}, "", nextUrl);
+    setShowDocs(!showDocs);
+  };
+
   const globalConfigPda = useMemo(() => getGlobalConfigPda(PROGRAM_ID), []);
 
   const pushTx = (signature: string, label: string) => {
     setTxLog((prev) => [{ signature, label, createdAt: Date.now() }, ...prev].slice(0, 12));
   };
 
-  // Show landing page when wallet not connected or user hasn't entered dashboard
-  if (!publicKey || !showDashboard) {
+  // Show landing page when wallet not connected or user hasn't entered dashboard (unless viewing docs)
+  if (!publicKey && !showDashboard && !showDocs) {
     return <LandingPage onConnected={() => setShowDashboard(true)} />;
   }
 
@@ -66,8 +86,12 @@ function App() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-          <button 
-            onClick={() => setShowDocs(!showDocs)} 
+          <a
+            href={showDocs ? "/" : "/docs"}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleDocsUrl();
+            }}
             style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--accent)", textDecoration: "none", transition: "color 0.2s", background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }} 
             onMouseEnter={e => e.currentTarget.style.color = "#fcd34d"} 
             onMouseLeave={e => e.currentTarget.style.color = "var(--accent)"} 
@@ -75,7 +99,7 @@ function App() {
           >
             <Book size={16} />
             {showDocs ? "Back to Dashboard" : "Protocol Docs"}
-          </button>
+          </a>
           <span className="badge badge-network hidden sm:inline-flex">Devnet</span>
           <WalletDisconnectButton 
             className="btn-secondary" 
