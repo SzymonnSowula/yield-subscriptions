@@ -17,7 +17,7 @@ pub struct InitializeConfig<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(
+pub fn handle_initialize_config(
     ctx: Context<InitializeConfig>,
     admin: Pubkey,
     annual_yield_bps: u16,

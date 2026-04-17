@@ -26,7 +26,7 @@ pub struct Subscribe<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<Subscribe>, initial_deposit: u64) -> Result<()> {
+pub fn handle_subscribe(ctx: Context<Subscribe>, initial_deposit: u64) -> Result<()> {
     require!(
         initial_deposit >= ctx.accounts.merchant_plan.min_deposit,
         ErrorCode::InsufficientDeposit

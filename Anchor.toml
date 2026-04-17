@@ -6,7 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-yield_subscriptions = "FZsK8dcZbeGEsm4fw45LWssEgYkTkxEPQ5YoMtWdhS61"
+yield_subscriptions = "8akGGuXaq6fRkDfxVRVoTEZsW4w55BPzeuardrFxjLAH"
+
+[programs.devnet]
+yield_subscriptions = "8akGGuXaq6fRkDfxVRVoTEZsW4w55BPzeuardrFxjLAH"
 
 [registry]
 url = "https://api.apr.dev"

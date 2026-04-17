@@ -18,7 +18,7 @@ pub struct Settle<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn handler(ctx: Context<Settle>) -> Result<()> {
+pub fn handle_settle(ctx: Context<Settle>) -> Result<()> {
     let now = Clock::get()?.unix_timestamp;
     let sub = &mut ctx.accounts.user_subscription;
     let plan = &ctx.accounts.merchant_plan;

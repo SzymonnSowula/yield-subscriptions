@@ -10,10 +10,8 @@ pub struct Cancel<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     pub global_config: Account<'info, GlobalConfig>,
-    pub merchant_plan: Account<'info, MerchantPlan>,
     #[account(
         mut, 
-        has_one = user, 
         has_one = plan,
         constraint = user_subscription.status == SubscriptionStatus::Active as u8 @ ErrorCode::SubscriptionCanceled
     )]
@@ -28,11 +26,13 @@ pub struct Cancel<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn handler(ctx: Context<Cancel>) -> Result<()> {
+pub fn handle_cancel(ctx: Context<Cancel>) -> Result<()> {
     let now = Clock::get()?.unix_timestamp;
     let sub = &mut ctx.accounts.user_subscription;
-    let plan = &ctx.accounts.merchant_plan;
+    let plan = &ctx.accounts.plan;
     let config = &ctx.accounts.global_config;
+
+    require_keys_eq!(sub.user, ctx.accounts.user.key(), ErrorCode::Unauthorized);
 
     // Settle-like logic before cancellation
     let elapsed_seconds = now
@@ -84,7 +84,7 @@ pub fn handler(ctx: Context<Cancel>) -> Result<()> {
             let cpi_accounts = Transfer {
                 from: ctx.accounts.plan_vault.to_account_info(),
                 to: ctx.accounts.merchant_token_account.to_account_info(),
-                authority: ctx.accounts.merchant_plan.to_account_info(),
+                authority: ctx.accounts.plan.to_account_info(),
             };
             let cpi_program = ctx.accounts.token_program.to_account_info();
             let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
@@ -104,7 +104,7 @@ pub fn handler(ctx: Context<Cancel>) -> Result<()> {
         let cpi_accounts = Transfer {
             from: ctx.accounts.plan_vault.to_account_info(),
             to: ctx.accounts.user_token_account.to_account_info(),
-            authority: ctx.accounts.merchant_plan.to_account_info(),
+            authority: ctx.accounts.plan.to_account_info(),
         };
         let cpi_program = ctx.accounts.token_program.to_account_info();
         let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);

@@ -5,11 +5,12 @@ import { MerchantView } from "./components/MerchantView";
 import { UserView } from "./components/UserView";
 import { Console } from "./components/Console";
 import { LandingPage } from "./components/LandingPage";
+import { DocsView } from "./components/DocsView";
 import { getGlobalConfigPda } from "./lib/pdas";
 import { PROGRAM_ID, USDC_MINT } from "./lib/program";
 import { useAnchorProgram } from "./hooks/useAnchorProgram";
 import type { TxLogItem } from "./types/tx";
-import { Hexagon, LogOut, Code, User } from "lucide-react";
+import { Hexagon, LogOut, Code, User, Book } from "lucide-react";
 
 type ViewMode = "merchant" | "user";
 
@@ -22,6 +23,7 @@ function App() {
   const [viewMode, setViewMode] = useState<ViewMode>("merchant");
   const [txLog, setTxLog] = useState<TxLogItem[]>([]);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showDocs, setShowDocs] = useState(false);
 
   const globalConfigPda = useMemo(() => getGlobalConfigPda(PROGRAM_ID), []);
 
@@ -64,9 +66,16 @@ function App() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-          <a href="https://github.com/SzymonnSowula/yield-subscriptions/blob/main/PROTOCOL_DOCS.md" target="_blank" rel="noreferrer" style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--accent)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fcd34d"} onMouseLeave={e => e.currentTarget.style.color = "var(--accent)"} className="hidden sm:inline-block">
-            Protocol Docs
-          </a>
+          <button 
+            onClick={() => setShowDocs(!showDocs)} 
+            style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--accent)", textDecoration: "none", transition: "color 0.2s", background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }} 
+            onMouseEnter={e => e.currentTarget.style.color = "#fcd34d"} 
+            onMouseLeave={e => e.currentTarget.style.color = "var(--accent)"} 
+            className="hidden sm:inline-flex"
+          >
+            <Book size={16} />
+            {showDocs ? "Back to Dashboard" : "Protocol Docs"}
+          </button>
           <span className="badge badge-network hidden sm:inline-flex">Devnet</span>
           <WalletDisconnectButton 
             className="btn-secondary" 
@@ -86,57 +95,61 @@ function App() {
           margin: "0 auto",
         }}
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-          <h1 className="section-title" style={{ fontSize: "1.75rem", margin: 0 }}>
-            {viewMode === "merchant" ? "Merchant Portal" : "User Dashboard"}
-          </h1>
-          
-          {/* ── Animated Tabs ── */}
-          <div style={{ display: "flex", background: "rgba(0,0,0,0.4)", borderRadius: "14px", padding: "4px", border: "1px solid var(--border)", position: "relative" }}>
-            <div style={{
-              position: "absolute",
-              top: 4, left: 4, bottom: 4,
-              width: "calc(50% - 4px)",
-              background: "rgba(255,255,255,0.08)",
-              borderRadius: "10px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-              transform: `translateX(${viewMode === 'user' ? '100%' : '0'})`,
-              transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              zIndex: 0
-            }} />
+        {!showDocs && (
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <h1 className="section-title" style={{ fontSize: "1.75rem", margin: 0 }}>
+              {viewMode === "merchant" ? "Merchant Portal" : "User Dashboard"}
+            </h1>
             
-            <button
-              onClick={() => setViewMode("merchant")}
-              style={{
-                position: "relative", zIndex: 1,
-                padding: "0.625rem 1.5rem",
-                background: "transparent", border: "none",
-                fontSize: "0.875rem", fontWeight: 600, fontFamily: "Inter",
-                color: viewMode === "merchant" ? "var(--text-primary)" : "var(--text-muted)",
-                cursor: "pointer", transition: "color 0.3s",
-                display: "flex", alignItems: "center", gap: "0.5rem"
-              }}
-            >
-              <Code size={16} /> Merchant
-            </button>
-            <button
-              onClick={() => setViewMode("user")}
-              style={{
-                position: "relative", zIndex: 1,
-                padding: "0.625rem 1.5rem",
-                background: "transparent", border: "none",
-                fontSize: "0.875rem", fontWeight: 600, fontFamily: "Inter",
-                color: viewMode === "user" ? "var(--text-primary)" : "var(--text-muted)",
-                cursor: "pointer", transition: "color 0.3s",
-                display: "flex", alignItems: "center", gap: "0.5rem"
-              }}
-            >
-              <User size={16} /> Subscriber
-            </button>
+            {/* ── Animated Tabs ── */}
+            <div style={{ display: "flex", background: "rgba(0,0,0,0.4)", borderRadius: "14px", padding: "4px", border: "1px solid var(--border)", position: "relative" }}>
+              <div style={{
+                position: "absolute",
+                top: 4, left: 4, bottom: 4,
+                width: "calc(50% - 4px)",
+                background: "rgba(255,255,255,0.08)",
+                borderRadius: "10px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                transform: `translateX(${viewMode === 'user' ? '100%' : '0'})`,
+                transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                zIndex: 0
+              }} />
+              
+              <button
+                onClick={() => setViewMode("merchant")}
+                style={{
+                  position: "relative", zIndex: 1,
+                  padding: "0.625rem 1.5rem",
+                  background: "transparent", border: "none",
+                  fontSize: "0.875rem", fontWeight: 600, fontFamily: "Inter",
+                  color: viewMode === "merchant" ? "var(--text-primary)" : "var(--text-muted)",
+                  cursor: "pointer", transition: "color 0.3s",
+                  display: "flex", alignItems: "center", gap: "0.5rem"
+                }}
+              >
+                <Code size={16} /> Merchant
+              </button>
+              <button
+                onClick={() => setViewMode("user")}
+                style={{
+                  position: "relative", zIndex: 1,
+                  padding: "0.625rem 1.5rem",
+                  background: "transparent", border: "none",
+                  fontSize: "0.875rem", fontWeight: 600, fontFamily: "Inter",
+                  color: viewMode === "user" ? "var(--text-primary)" : "var(--text-muted)",
+                  cursor: "pointer", transition: "color 0.3s",
+                  display: "flex", alignItems: "center", gap: "0.5rem"
+                }}
+              >
+                <User size={16} /> Subscriber
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {!program ? (
+        {showDocs ? (
+          <DocsView />
+        ) : !program ? (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 400, color: "var(--text-muted)", gap: "1rem" }}>
             <span className="spinner" style={{ borderTopColor: "var(--accent)", width: 24, height: 24 }} />
             <span style={{ fontSize: "1rem", fontWeight: 500 }}>Initializing protocol layer…</span>

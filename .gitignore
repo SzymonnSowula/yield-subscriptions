@@ -5,3 +5,5 @@ target
 node_modules
 test-ledger
 .yarn
+pitch_deck.md
+DEVPOST_SUBMISSION.md

@@ -32,7 +32,7 @@ pub struct CreatePlan<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-pub fn handler(
+pub fn handle_create_plan(
     ctx: Context<CreatePlan>,
     price_per_period: u64,
     period_seconds: i64,
