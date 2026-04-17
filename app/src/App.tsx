@@ -52,7 +52,7 @@ function App() {
   };
 
   // Show landing page when wallet not connected or user hasn't entered dashboard (unless viewing docs)
-  if (!publicKey && !showDashboard && !showDocs) {
+  if (!showDocs && (!publicKey || !showDashboard)) {
     return <LandingPage onConnected={() => setShowDashboard(true)} />;
   }
 
@@ -184,13 +184,13 @@ function App() {
               {viewMode === "merchant" ? (
                 <MerchantView
                   program={program}
-                  merchant={publicKey}
+                  merchant={publicKey!}
                   globalConfigPda={globalConfigPda}
                   usdcMint={USDC_MINT}
                   onTx={pushTx}
                 />
               ) : (
-                <UserView program={program} user={publicKey} globalConfigPda={globalConfigPda} onTx={pushTx} />
+                <UserView program={program} user={publicKey!} globalConfigPda={globalConfigPda} onTx={pushTx} />
               )}
             </div>
             <Console items={txLog} />
